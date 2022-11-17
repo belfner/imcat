@@ -28,8 +28,8 @@ imcat also works on the latest version of Windows 10.
 $ imcat [options] file1 [file2 .. fileN]
 ```
 
-Use `-h {NUM}` and `-w {NUM}` specify the height or width of the output image respectively. Note: only width will be
-used if both dimensions are passed.
+Use `-h {NUM}` and `-w {NUM}` specify the height or width of the output image respectively. If only one of the two is
+passed the image will maintain its aspect ratio.
 
 ```
 $ imcat -w 10 {IMG_PATH}
