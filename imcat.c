@@ -171,14 +171,14 @@ static int process_image( const char* nm )
 
 	if ( do_fit != -1)
 	{
-		if ( (float) termw / (float) termh < aspectratio )
+		int adj_h = doubleres ? termh * 2 : termh;
+		if ( ( (float) termw / (float) adj_h ) < aspectratio )
 		{
 			outw = imw < termw ? imw : termw;
 			outh = (int) roundf( outw / aspectratio );
 		}
 		else
 		{
-			int adj_h = doubleres ? termh * 2 : termh;
 			outh = imh < adj_h ? imh : adj_h;
 			outw = (int) roundf( outh * aspectratio );
 		}
@@ -288,7 +288,7 @@ int main( int argc, char* argv[] )
 	if ( argc == 1 || !strcmp( argv[1], "--help" ) )
 	{
 		fprintf( stderr, "Usage:\n"
-						 " %s image [options] [image2 .. imageN]\n"
+						 " %s [options] image [image2 .. imageN]\n"
 						 "Displays image in terminal\n\nOptions:\n"
 						 " -f, --fit      fit image to console size\n"
 						 " -h, --height   set height of output image (image will maintain aspect ratio if passed"
