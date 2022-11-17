@@ -183,6 +183,11 @@ static int process_image( const char* nm )
 			outw = (int) roundf( outh * aspectratio );
 		}
 	}
+	else if (uw != -1 && uh != -1)
+	{
+		outw = uw;
+		outh = uh;
+	}
 	else if ( uw != -1 )
 	{
 		outw = uw;
@@ -199,12 +204,18 @@ static int process_image( const char* nm )
 		outh = (int) roundf( outw / aspectratio );
 	}
 
-	float pixels_per_char = imw / (float)outw;
-	if ( pixels_per_char < 1 ) pixels_per_char = 1;
-	int kernelsize = (int) floorf( pixels_per_char );
-	if ( (kernelsize&1) == 0 ) kernelsize--;
-	if ( !kernelsize ) kernelsize=1;
-	const int kernelradius = (kernelsize-1)/2;
+	float pixels_per_char_w = imw / (float)outw;
+	float pixels_per_char_h = imh / (float)outh;
+	if ( pixels_per_char_w < 1 ) pixels_per_char_w = 1;
+	if ( pixels_per_char_h < 1 ) pixels_per_char_h = 1;
+	int kernelsize_w = (int) floorf( pixels_per_char_w );
+	int kernelsize_h = (int) floorf( pixels_per_char_h );
+	if ( (kernelsize_w&1) == 0 ) kernelsize_w--;
+	if ( (kernelsize_h&1) == 0 ) kernelsize_h--;
+	if ( !kernelsize_w ) kernelsize_w=1;
+	if ( !kernelsize_h ) kernelsize_h=1;
+	const int kernelradius_w = (kernelsize_w-1)/2;
+	const int kernelradius_h = (kernelsize_h-1)/2;
 
 	//fprintf( stderr, "pixels per char: %f, kernelsize: %d, out: %dx%d\n", pixels_per_char, kernelsize, outw, outh );
 
@@ -212,17 +223,17 @@ static int process_image( const char* nm )
 	for ( int y=0; y<outh; ++y )
 		for ( int x=0; x<outw; ++x )
 		{
-			const int cx = (int) roundf( pixels_per_char * x );
-			const int cy = (int) roundf( pixels_per_char * y );
+			const int cx = (int) roundf( pixels_per_char_w * x );
+			const int cy = (int) roundf( pixels_per_char_h * y );
 			int acc[4] = {0,0,0,0};
 			int numsamples=0;
-			int sy = cy-kernelradius;
+			int sy = cy-kernelradius_h;
 			sy = sy < 0 ? 0 : sy;
-			int ey = cy+kernelradius;
+			int ey = cy+kernelradius_h;
 			ey = ey >= imh ? imh-1 : ey;
-			int sx = cx-kernelradius;
+			int sx = cx-kernelradius_w;
 			sx = sx < 0 ? 0 : sx;
-			int ex = cx+kernelradius;
+			int ex = cx+kernelradius_w;
 			ex = ex >= imw ? imw-1 : ex;
 			for ( int yy = sy; yy <= ey; ++yy )
 				for ( int xx = sx; xx <= ex; ++xx )
