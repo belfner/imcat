@@ -35,8 +35,8 @@ passed the image will maintain its aspect ratio.
 $ imcat -w 10 {IMG_PATH}
 ```
 
-Use `-f` or `--fit` to have the output image fit to the console size. Note: fit will override both height and width 
-arguments
+Use `-f` or `--fit` to have the output image fit to the console size. Note: `fit` will override both `height` and 
+`width` arguments.
 
 ```
 $ imcat -f {IMG_PATH}
