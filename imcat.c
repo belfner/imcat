@@ -300,8 +300,15 @@ int main( int argc, char* argv[] )
 		exit( 0 );
 	}
 
+		// Step 0: Windows cmd.exe needs to be put in proper console mode.
+	set_console_mode();
+
+	// Step 1: figure out the width and height of terminal.
+	get_terminal_size();
+	//fprintf( stderr, "Your terminal is size %dx%d\n", termw, termh );
+
 	// Get location and value of passed flags
-	int hloc=-1, wloc=-1, floc=-1;
+	int hloc=-1, wloc=-1, floc=-1,thloc=-1,twloc=-1;
 	for ( int i=1; i<argc; ++i )
 	{
 		if ( !strcmp( argv[i], "-f" ) || !strcmp( argv[i], "--fit" ) )
@@ -355,7 +362,48 @@ int main( int argc, char* argv[] )
 				exit( -1 );
 			}
 		}
+		else if ( !strcmp( argv[i], "--termh" ))
+		{
+			// Check to see if argument has already been passed
+			if ( thloc != -1 )
+			{
+				fprintf( stderr, "Height argument passed multiple times\n");
+				exit(1);
+			}
+
+			thloc = i;
+			if ( i+1 < argc )
+			{
+				termh = get_int( argv[i+1], "Invalid height value \"%s\"\n" );
+			}
+			else
+			{
+				fprintf( stderr, "Missing height value\n" );
+				exit( -1 );
+			}
+		}
+		else if ( !strcmp( argv[i], "--termw" ))
+		{
+			if ( twloc != -1 )
+			{
+				fprintf( stderr, "Height argument passed multiple times\n");
+				exit(1);
+			}
+
+			twloc = i;
+			if ( i+1 < argc )
+			{
+				termw = get_int( argv[i+1], "Invalid height value \"%s\"\n" );
+			}
+			else
+			{
+				fprintf( stderr, "Missing height value\n" );
+				exit( -1 );
+			}
+		}
 	}
+
+
 
 	// Parse environment variable for terminal background colour.
 	const char* imcatbg = getenv( "IMCATBG" );
@@ -368,18 +416,13 @@ int main( int argc, char* argv[] )
 		blend = 1;
 	}
 
-	// Step 0: Windows cmd.exe needs to be put in proper console mode.
-	set_console_mode();
 
-	// Step 1: figure out the width and height of terminal.
-	get_terminal_size();
-	//fprintf( stderr, "Your terminal is size %dx%d\n", termw, termh );
 
 	// Step 2: Process all images on the command line.
 	for ( int i=1; i<argc; ++i )
 	{
 		// Ignore arguments that are not image paths
-		if ( i == hloc || i == hloc + 1 || i == wloc || i == wloc + 1 || i == floc )
+		if ( i == hloc || i == hloc + 1 || i == wloc || i == wloc + 1 || i == floc || i == thloc || i == thloc + 1 || i == twloc || i == twloc + 1 )
 		{
 			continue;
 		}
