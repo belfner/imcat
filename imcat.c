@@ -186,7 +186,7 @@ static int process_image( const char* nm )
 	else if (uw != -1 && uh != -1)
 	{
 		outw = uw;
-		outh = uh;
+		outh = doubleres ? uh * 2 : uh;
 	}
 	else if ( uw != -1 )
 	{
@@ -195,7 +195,7 @@ static int process_image( const char* nm )
 	}
 	else if ( uh != -1 )
 	{
-		outh = uh;
+		outh = doubleres ? uh * 2 : uh;
 		outw = (int) roundf( outh * aspectratio );
 	}
 	else
