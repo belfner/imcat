@@ -295,7 +295,10 @@ int main( int argc, char* argv[] )
 						  " without specifying width)\n"
 						 " -w, --width    set width of output image (image will maintain aspect ratio if passed without"
 						  " specifying height)\n"
+						 "     --termh    override terminal height\n"
+						 "     --termw    override terminal width\n"
 						 "     --help     display this help and exit\n\n",
+
 				 argv[0] );
 		exit( 0 );
 	}
